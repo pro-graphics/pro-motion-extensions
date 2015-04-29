@@ -1,0 +1,7 @@
+*.js
+*.js.map
+*.gz
+*.zip
+.idea/
+.tscache/
+node_modules/
