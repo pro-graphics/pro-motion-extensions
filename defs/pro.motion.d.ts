@@ -285,40 +285,6 @@ declare module Pro.Motion.Config {
         startHint?: boolean;
     }
 }
-declare module Pro.Motion.Models.Scripts {
-    class Script {
-        scriptSet: ScriptSet;
-        type: ScriptType;
-        x: number;
-        y: number;
-        constructor(scriptSet: ScriptSet, type: ScriptType);
-    }
-}
-declare module Pro.Motion.Models.Scripts {
-    class ActionsScript extends Script {
-        actions: Actions.Action[];
-        constructor(scriptSet: ScriptSet, type: ScriptType);
-        removeAction(action: Actions.Action): void;
-    }
-}
-declare module Pro.Motion.Models.Actions {
-    enum ActionType {
-        SetProperties = 0,
-    }
-}
-declare module Pro.Motion.Models.Actions.ActionType {
-    function fromString(value: string): ActionType;
-    function toString(value: ActionType): string;
-}
-declare module Pro.Motion.Models.Actions {
-    class Action {
-        script: Scripts.ActionsScript;
-        actionType: ActionType;
-        delay: number;
-        constructor(script: Scripts.ActionsScript, actionType: ActionType, delay: number);
-        saveJson(): any;
-    }
-}
 declare module Pro.Motion.Models.Properties.Variables {
     interface IVariable {
         defaultValueOverride: any;
@@ -427,17 +393,6 @@ declare module Pro.Motion.Models.Properties {
     }
 }
 declare module Pro.Motion.Models.Properties {
-    interface IPropertySet {
-        properties: IProperty[];
-    }
-}
-declare module Pro.Motion.Models.Actions {
-    class SetPropertiesAction extends Action implements Properties.IPropertySet {
-        properties: Properties.IProperty[];
-        constructor(script: Scripts.ActionsScript, delay: number, properties: Properties.IProperty[]);
-    }
-}
-declare module Pro.Motion.Models.Properties {
     class PropertyList {
         propertyTypes: IPropertyType[];
         properties: IProperty[];
@@ -485,6 +440,58 @@ declare module Pro.Motion.Models.Flows {
     class SimpleFlow extends Flow {
         constructor(story: Story, placement: Types.Placement, defaultPageClass: string, pageAspectRatio: number);
         getDefaultPageClassName(): string;
+    }
+}
+declare module Pro.Motion.Extensions.Flows.unknown {
+    import Models = Pro.Motion.Models;
+    import Types = Pro.Motion.Types;
+    class Extension extends Models.Flows.SimpleFlow {
+        constructor(story: Models.Story, placement: Types.Placement, defaultPageClass: string, pageAspectRatio: number);
+    }
+}
+declare module Pro.Motion.Render {
+    import Properties = Pro.Motion.Models.Properties;
+    interface AfterCssBuckets {
+        (properties: Properties.IProperty[], buckets: any[], containerSize: Types.Size): void;
+    }
+}
+declare module Pro.Motion.Render {
+    import Models = Pro.Motion.Models;
+    import Types = Pro.Motion.Types;
+    import Scripts = Pro.Motion.Models.Scripts;
+    import Properties = Pro.Motion.Models.Properties;
+    class Visual {
+        model: Models.Model;
+        element: Element;
+        div: HTMLDivElement;
+        constructor(model: Models.Model, element: Element);
+        initializeProperties(story: Models.Story, elements: Element[], containerSize: Types.Size, timeline: TimelineMax, init: Properties.PropertyList, centerAlignment: boolean, forceProps?: any, afterCssBuckets?: AfterCssBuckets): void;
+        private generateEventTimeline(itemSet, divs, containerSize, event, rootTimeline, label, afterCssBuckets?);
+        generateActionsForStep(itemSet: IItemSet, divs: Element[], containerSize: Types.Size, timeline: TimelineMax, stepIndex: number, label: string, scriptSet: Scripts.ScriptSet, afterCssBuckets?: AfterCssBuckets): void;
+        static postProcessCssBuckets(buckets: any[], afterCssBuckets: AfterCssBuckets, properties: Properties.IProperty[], containerSize: Types.Size): void;
+    }
+}
+declare module Pro.Motion.Render.Flows {
+    interface IFlow {
+        pageElems: Page[];
+        initializePlacement(timeline: TimelineMax): any;
+        pageAspectRatio(): number;
+    }
+}
+declare module Pro.Motion.Render {
+    interface IItemSet {
+        items: Items.Item[];
+        div: HTMLDivElement;
+    }
+}
+declare module Pro.Motion.Render.Items {
+    import Models = Pro.Motion.Models;
+    class Item extends Visual {
+        private item;
+        itemSetElem: IItemSet;
+        constructor(item: Models.Items.Item, itemSetElem: IItemSet, element?: Element);
+        initializeItem(timeline: TimelineMax, cameraSize: Types.Size): void;
+        generateStepActions(itemSet: IItemSet, pageSize: Types.Size, timeline: TimelineMax, stepIndex: number, label: string): void;
     }
 }
 declare module Pro.Motion.Models.Properties {
@@ -660,9 +667,157 @@ declare module Pro.Motion.Models.Items {
         getCountOfStepsUsed(): number;
     }
 }
-declare module Pro.Motion.Models.Items {
-    class IconItem extends Item {
-        constructor(itemSet: IItemSet, init: Properties.PropertyList, scriptSet: Scripts.ScriptSet);
+declare module Pro.Motion.Render.Items {
+    import Models = Pro.Motion.Models;
+    class SequencedItem extends Item {
+        sequencedItem: Models.Items.SequencedItem;
+        constructor(sequencedItem: Models.Items.SequencedItem, itemSetElem: IItemSet);
+        moveToSubStep(position: number, animate: boolean, cameraSize: Types.Size): void;
+        getCountOfSubSteps(): number;
+    }
+}
+declare module Pro.Motion.Models.Scripts {
+    class Script {
+        scriptSet: ScriptSet;
+        type: ScriptType;
+        x: number;
+        y: number;
+        constructor(scriptSet: ScriptSet, type: ScriptType);
+    }
+}
+declare module Pro.Motion.Models.Scripts {
+    class ScriptSet {
+        itemSet: IItemSet;
+        name: string;
+        itemProperties: Properties.IPropertyType[];
+        scripts: Script[];
+        constructor(itemSet: IItemSet, name: string, itemProperties: Properties.IPropertyType[]);
+        getCountOfStepsUsed(): number;
+        insertStep(index: number): void;
+        deleteStep(index: number): void;
+    }
+}
+declare module Pro.Motion.Extensions.Items.unknown {
+    import Models = Pro.Motion.Models;
+    import Items = Models.Items;
+    class Extension extends Items.Item {
+        unknownType: string;
+        constructor(itemSet: Models.IItemSet, unknownType: string);
+    }
+}
+declare module Pro.Motion.Extensions.Items.unknown {
+    import Models = Pro.Motion.Models;
+    function readJson(itemSet: Models.IItemSet, json: any): Models.Items.Item;
+}
+declare module Pro.Motion.Serialization {
+    import Models = Pro.Motion.Models;
+    class ItemReader {
+        static read(itemSet: Models.IItemSet, json: any): Models.Items.Item;
+        static lookupExtension(itemType: string): any;
+    }
+}
+declare module Pro.Motion.Render {
+    import Models = Pro.Motion.Models;
+    class Page extends Visual implements IItemSet {
+        page: Models.Page;
+        flowElem: Flows.Flow;
+        flowIndex: number;
+        pageIndex: number;
+        steps: Step[];
+        items: Items.Item[];
+        constructor(page: Models.Page, flowElem: Flows.Flow, flowIndex: number, pageIndex: number);
+        static createItems(itemSet: Render.IItemSet, items: Models.Items.Item[]): void;
+        generateStepsActions(timeline: TimelineMax, priorStep: Render.Step): Render.Step;
+    }
+}
+declare module Pro.Motion.Render.Flows {
+    import Models = Pro.Motion.Models;
+    class Flow extends Visual implements IFlow {
+        private flow;
+        cameraElem: Camera;
+        flowIndex: number;
+        pageElems: Page[];
+        constructor(flow: Models.Flows.Flow, cameraElem: Camera, flowIndex: number);
+        initializePlacement(timeline: TimelineMax): void;
+        initializePerspective(): void;
+        initializeFlowPlacement(timeline: TimelineMax): void;
+        private generateCameraMovement(timeline, label);
+        initializePages(timeline: TimelineMax): void;
+        generatePageMovement(timeline: TimelineMax, label: string, pageIndex: number): void;
+        generateStepsActions(timeline: TimelineMax, priorStep: Render.Step): Render.Step;
+        pageAspectRatio(): number;
+    }
+}
+declare module Pro.Motion.Render.Flows {
+    import Models = Pro.Motion.Models;
+    class SimpleFlow extends Flow {
+        private simpleFlow;
+        constructor(simpleFlow: Models.Flows.SimpleFlow, cameraElem: Camera, flowIndex: number);
+        initializePages(timeline: TimelineMax): void;
+        generatePageMovement(timeline: TimelineMax, label: string, pageIndex: number): void;
+        private applyCss(timeline, div, label, duration, css, ease);
+    }
+}
+declare module Pro.Motion.Extensions.Flows.unknown {
+    import Render = Pro.Motion.Render;
+    class Renderer extends Render.Flows.SimpleFlow {
+        constructor(unknownFlow: Extension, cameraElem: Render.Camera, flowIndex: number);
+    }
+}
+declare module Pro.Motion.Extensions.Flows.unknown {
+    import Models = Pro.Motion.Models;
+    function readJson(story: Models.Story, json: any): Models.Flows.Flow;
+}
+declare module Pro.Motion.Extensions.Items.unknown {
+    import Items = Pro.Motion.Render.Items;
+    class Renderer extends Items.Item {
+        private unknownItem;
+        private divs;
+        constructor(unknownItem: Extension, itemSetElem: Pro.Motion.Render.IItemSet);
+    }
+}
+declare module Pro.Motion.Models.Scripts {
+    class ActionsScript extends Script {
+        actions: Actions.Action[];
+        constructor(scriptSet: ScriptSet, type: ScriptType);
+        removeAction(action: Actions.Action): void;
+    }
+}
+declare module Pro.Motion.Models.Actions {
+    enum ActionType {
+        SetProperties = 0,
+    }
+}
+declare module Pro.Motion.Models.Actions.ActionType {
+    function fromString(value: string): ActionType;
+    function toString(value: ActionType): string;
+}
+declare module Pro.Motion.Models.Actions {
+    class Action {
+        script: Scripts.ActionsScript;
+        actionType: ActionType;
+        delay: number;
+        constructor(script: Scripts.ActionsScript, actionType: ActionType, delay: number);
+        saveJson(): any;
+    }
+}
+declare module Pro.Motion.Models.Properties {
+    interface IPropertySet {
+        properties: IProperty[];
+    }
+}
+declare module Pro.Motion.Models.Actions {
+    class SetPropertiesAction extends Action implements Properties.IPropertySet {
+        properties: Properties.IProperty[];
+        constructor(script: Scripts.ActionsScript, delay: number, properties: Properties.IProperty[]);
+    }
+}
+declare module Pro.Motion.Models.Flows {
+    class PlacementFlow extends Flow {
+        private defaultPageClassIfNotGiven;
+        constructor(story: Story, flowType: string, placement: Types.Placement, defaultPageClass: string, pageAspectRatio: number, defaultPageClassIfNotGiven: string);
+        getDefaultPageClassName(): string;
+        getDefaultPageClassValue(): any;
     }
 }
 declare module Pro.Motion.Models.Properties {
@@ -992,12 +1147,6 @@ declare module Pro.Motion.Models.Properties.PerElement {
     }
 }
 declare module Pro.Motion.Models.Properties.PerElement {
-    class IconItem {
-        private static _propertyTypes;
-        static getPropertyTypes(): Properties.IPropertyType[];
-    }
-}
-declare module Pro.Motion.Models.Properties.PerElement {
     class ImageItem {
         private static _propertyTypes;
         static getPropertyTypes(): Properties.IPropertyType[];
@@ -1108,18 +1257,6 @@ declare module Pro.Motion.Models.Scripts {
     }
 }
 declare module Pro.Motion.Models.Scripts {
-    class ScriptSet {
-        itemSet: IItemSet;
-        name: string;
-        itemProperties: Properties.IPropertyType[];
-        scripts: Script[];
-        constructor(itemSet: IItemSet, name: string, itemProperties: Properties.IPropertyType[]);
-        getCountOfStepsUsed(): number;
-        insertStep(index: number): void;
-        deleteStep(index: number): void;
-    }
-}
-declare module Pro.Motion.Models.Scripts {
     class StepEvent extends ActionsScript {
         stepIndex: number;
         constructor(scriptSet: ScriptSet, stepIndex: number);
@@ -1140,26 +1277,11 @@ declare module Pro.Motion.Models {
         constructor(autoAdvanceDelay?: number);
     }
 }
-declare module Pro.Motion.Render {
-    import Properties = Pro.Motion.Models.Properties;
-    interface AfterCssBuckets {
-        (properties: Properties.IProperty[], buckets: any[], containerSize: Types.Size): void;
-    }
-}
-declare module Pro.Motion.Render {
+declare module Pro.Motion.Serialization {
     import Models = Pro.Motion.Models;
-    import Types = Pro.Motion.Types;
-    import Scripts = Pro.Motion.Models.Scripts;
-    import Properties = Pro.Motion.Models.Properties;
-    class Visual {
-        model: Models.Model;
-        element: Element;
-        div: HTMLDivElement;
-        constructor(model: Models.Model, element: Element);
-        initializeProperties(story: Models.Story, elements: Element[], containerSize: Types.Size, timeline: TimelineMax, init: Properties.PropertyList, centerAlignment: boolean, forceProps?: any, afterCssBuckets?: AfterCssBuckets): void;
-        private generateEventTimeline(itemSet, divs, containerSize, event, rootTimeline, label, afterCssBuckets?);
-        generateActionsForStep(itemSet: IItemSet, divs: Element[], containerSize: Types.Size, timeline: TimelineMax, stepIndex: number, label: string, scriptSet: Scripts.ScriptSet, afterCssBuckets?: AfterCssBuckets): void;
-        static postProcessCssBuckets(buckets: any[], afterCssBuckets: AfterCssBuckets, properties: Properties.IProperty[], containerSize: Types.Size): void;
+    class FlowReader {
+        static read(story: Models.Story, json: any): Models.Flows.Flow;
+        static lookupExtension(itemType: string): any;
     }
 }
 declare module Pro.Motion.Render {
@@ -1401,84 +1523,9 @@ declare module Pro.Motion.Render.Actions {
     }
 }
 declare module Pro.Motion.Render.Flows {
-    interface IFlow {
-        pageElems: Page[];
-        initializePlacement(timeline: TimelineMax): any;
-        pageAspectRatio(): number;
-    }
-}
-declare module Pro.Motion.Render {
-    interface IItemSet {
-        items: Items.Item[];
-        div: HTMLDivElement;
-    }
-}
-declare module Pro.Motion.Render.Items {
     import Models = Pro.Motion.Models;
-    class Item extends Visual {
-        private item;
-        itemSetElem: IItemSet;
-        constructor(item: Models.Items.Item, itemSetElem: IItemSet, element?: Element);
-        initializeItem(timeline: TimelineMax, cameraSize: Types.Size): void;
-        generateStepActions(itemSet: IItemSet, pageSize: Types.Size, timeline: TimelineMax, stepIndex: number, label: string): void;
-    }
-}
-declare module Pro.Motion.Render.Items {
-    import Models = Pro.Motion.Models;
-    class SequencedItem extends Item {
-        sequencedItem: Models.Items.SequencedItem;
-        constructor(sequencedItem: Models.Items.SequencedItem, itemSetElem: IItemSet);
-        moveToSubStep(position: number, animate: boolean, cameraSize: Types.Size): void;
-        getCountOfSubSteps(): number;
-    }
-}
-declare module Pro.Motion.Render {
-    import Models = Pro.Motion.Models;
-    class Page extends Visual implements IItemSet {
-        page: Models.Page;
-        flowElem: Flows.Flow;
-        flowIndex: number;
-        pageIndex: number;
-        steps: Step[];
-        items: Items.Item[];
-        constructor(page: Models.Page, flowElem: Flows.Flow, flowIndex: number, pageIndex: number);
-        static createItems(itemSet: Render.IItemSet, items: Models.Items.Item[]): void;
-        generateStepsActions(timeline: TimelineMax, priorStep: Render.Step): Render.Step;
-    }
-}
-declare module Pro.Motion.Render.Flows {
-    import Models = Pro.Motion.Models;
-    class Flow extends Visual implements IFlow {
-        private flow;
-        cameraElem: Camera;
-        flowIndex: number;
-        pageElems: Page[];
+    class PlacementFlow extends Flow {
         constructor(flow: Models.Flows.Flow, cameraElem: Camera, flowIndex: number);
-        initializePlacement(timeline: TimelineMax): void;
-        initializePerspective(): void;
-        initializeFlowPlacement(timeline: TimelineMax): void;
-        private generateCameraMovement(timeline, label);
-        initializePages(timeline: TimelineMax): void;
-        generatePageMovement(timeline: TimelineMax, label: string, pageIndex: number): void;
-        generateStepsActions(timeline: TimelineMax, priorStep: Render.Step): Render.Step;
-        pageAspectRatio(): number;
-    }
-}
-declare module Pro.Motion.Render.Flows {
-    import Models = Pro.Motion.Models;
-    class SimpleFlow extends Flow {
-        private simpleFlow;
-        constructor(simpleFlow: Models.Flows.SimpleFlow, cameraElem: Camera, flowIndex: number);
-        initializePages(timeline: TimelineMax): void;
-        generatePageMovement(timeline: TimelineMax, label: string, pageIndex: number): void;
-        private applyCss(timeline, div, label, duration, css, ease);
-    }
-}
-declare module Pro.Motion.Render.Items {
-    import Models = Pro.Motion.Models;
-    class IconItem extends Item {
-        private iconItem;
-        constructor(iconItem: Models.Items.IconItem, itemSetElem: IItemSet);
     }
 }
 declare module Pro.Motion.Render.Items {
@@ -1582,23 +1629,17 @@ declare module Pro.Motion.Serialization {
 }
 declare module Pro.Motion.Serialization {
     import Models = Pro.Motion.Models;
-    class FlowReader {
-        static read(story: Models.Story, json: any): Models.Flows.Flow;
-    }
-}
-declare module Pro.Motion.Serialization {
-    import Models = Pro.Motion.Models;
     class FlowWriter {
         static write(flow: Models.Flows.Flow): any;
     }
 }
 declare module Pro.Motion.Serialization.Flows {
     import Models = Pro.Motion.Models;
-    function read_simpleFlow(story: Models.Story, json: any): Models.Flows.Flow;
+    function read_simple(story: Models.Story, json: any): Models.Flows.Flow;
 }
 declare module Pro.Motion.Serialization.Flows {
     import Models = Pro.Motion.Models;
-    function write_simpleFlow(flow: Models.Flows.SimpleFlow, json: any): void;
+    function write_simple(flow: Models.Flows.SimpleFlow, json: any): void;
 }
 declare module Pro.Motion.Serialization {
     class FrameReader {
@@ -1613,35 +1654,21 @@ declare module Pro.Motion.Serialization {
 }
 declare module Pro.Motion.Serialization {
     import Models = Pro.Motion.Models;
-    class ItemReader {
-        static read(itemSet: Models.IItemSet, json: any): Models.Items.Item;
-    }
-}
-declare module Pro.Motion.Serialization {
-    import Models = Pro.Motion.Models;
     class ItemWriter {
         static write(item: Models.Items.Item): any;
     }
 }
 declare module Pro.Motion.Serialization.Items {
     import Models = Pro.Motion.Models;
-    function read_layerItem(itemSet: Models.IItemSet, json: any): Models.Items.Item;
+    function read_image(itemSet: Models.IItemSet, json: any): Models.Items.Item;
 }
 declare module Pro.Motion.Serialization.Items {
     import Models = Pro.Motion.Models;
-    function read_imageItem(itemSet: Models.IItemSet, json: any): Models.Items.Item;
+    function read_layer(itemSet: Models.IItemSet, json: any): Models.Items.Item;
 }
 declare module Pro.Motion.Serialization.Items {
     import Models = Pro.Motion.Models;
-    function read_sdIconItem(itemSet: Models.IItemSet, json: any): Models.Items.Item;
-}
-declare module Pro.Motion.Serialization.Items {
-    import Models = Pro.Motion.Models;
-    function read_textItem(itemSet: Models.IItemSet, json: any): Models.Items.Item;
-}
-declare module Pro.Motion.Serialization.Items {
-    import Models = Pro.Motion.Models;
-    function write_layerItem(item: Models.Items.LayerItem, json: any): void;
+    function read_text(itemSet: Models.IItemSet, json: any): Models.Items.Item;
 }
 declare module Pro.Motion.Serialization {
     import Properties = Pro.Motion.Models.Properties;
@@ -1669,15 +1696,15 @@ declare module Pro.Motion.Serialization {
 }
 declare module Pro.Motion.Serialization.Items {
     import Models = Pro.Motion.Models;
-    function write_imageItem(item: Models.Items.ImageItem, json: any): void;
+    function write_image(item: Models.Items.ImageItem, json: any): void;
 }
 declare module Pro.Motion.Serialization.Items {
     import Models = Pro.Motion.Models;
-    function write_sdIconItem(item: Models.Items.IconItem, json: any): void;
+    function write_layer(item: Models.Items.LayerItem, json: any): void;
 }
 declare module Pro.Motion.Serialization.Items {
     import Models = Pro.Motion.Models;
-    function write_textItem(item: Models.Items.TextItem, json: any): void;
+    function write_text(item: Models.Items.TextItem, json: any): void;
 }
 declare module Pro.Motion.Serialization {
     import Models = Pro.Motion.Models;

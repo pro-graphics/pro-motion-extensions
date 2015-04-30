@@ -30,7 +30,7 @@ module Pro.Motion.Extensions.Items.textStack {
                     init: Properties.PropertyList,
                     scriptSet: Scripts.ScriptSet) {
 
-            super(itemSet, "textStackItem", "TextStackItem", sequenceOnStepIndex, init, scriptSet);
+            super(itemSet, "textStack", "TextStack", sequenceOnStepIndex, init, scriptSet);
 
         }
     }
