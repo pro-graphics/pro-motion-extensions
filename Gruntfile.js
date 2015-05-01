@@ -33,7 +33,7 @@ module.exports = function (grunt) {
                     ' * @license: https://github.com/pro-graphics/pro-motion-extensions\n' +
                     ' **/\n'
                 },
-                files: {src: ['build/js/pro-motion-extensions.js']}
+                files: {src: ['build/js/pro.motion.extensions.js']}
             },
             GaryC: {
                 options: {
@@ -49,6 +49,17 @@ module.exports = function (grunt) {
                         'build/js/items/simpleBarChart/pro.motion.item.simpleBarChart.js',
                         'build/js/items/textStack/pro.motion.item.textStack.js'
                     ]
+                }
+            }
+        },
+        uglify: {
+            options: {
+                screwIE8: true,
+                preserveComments: 'some'
+            },
+            extensions: {
+                files: {
+                    'build/js/pro.motion.extensions.min.js': ['build/js/pro.motion.extensions.js']
                 }
             }
         },
@@ -73,11 +84,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks("grunt-ts");
     grunt.loadNpmTasks('grunt-text-replace');
 
     grunt.registerTask('default', ['ts']);
-    grunt.registerTask('package', ['ts', 'usebanner', 'compress']);
+    grunt.registerTask('package', ['ts', 'usebanner', 'uglify', 'compress']);
 
 
 };
