@@ -19,7 +19,7 @@ stack3.story = {
             pages:[
                 { items:[
                     {
-                        setup:{text:"A 'Stack Flow' with<br>custom configuration."},
+                        setup:{text:"A 'Page Stack' with<br>custom configuration."},
                         init:{font:10, textAlign:"center"}
                     }]
                 },

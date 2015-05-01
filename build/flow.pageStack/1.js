@@ -11,7 +11,7 @@ stack1.story = {
             pages:[
                 { items:[
                     {
-                        setup:{ text:"This is a seven page 'Stack Flow' using the default configuration."},
+                        setup:{ text:"This is a seven page 'Page Stack' using the default configuration."},
                         init:{font:10, width:90, textAlign:"center"},
                         scripts:[{ actions:[{ delay:3}]}]
                     }]
