@@ -7,15 +7,23 @@ module.exports = function (grunt) {
         ts: {
             all: {
                 src: ["items/**/*.ts", "flows/**/*.ts"],
-                out: 'build/pro.motion.extensions.js'
+                out: 'build/js/pro.motion.extensions.js'
             },
-            simpleBarChart: {
+            flow_pageStack: {
+                src: ["flows/pageStack/**/*.ts"],
+                out: 'build/js/flows/pageStack/pro.motion.flow.pageStack.js'
+            },
+            item_imageStack: {
+                src: ["items/imageStack/**/*.ts"],
+                out: 'build/js/items/imageStack/pro.motion.item.imageStack.js'
+            },
+            item_simpleBarChart: {
                 src: ["items/simpleBarChart/**/*.ts"],
-                out: 'build/items/simpleBarChart/pro.motion.simpleBarChart.js'
+                out: 'build/js/items/simpleBarChart/pro.motion.item.simpleBarChart.js'
             },
-            textStack: {
+            item_textStack: {
                 src: ["items/textStack/**/*.ts"],
-                out: 'build/items/textStack/pro.motion.textStack.js'
+                out: 'build/js/items/textStack/pro.motion.item.textStack.js'
             }
         },
         usebanner: {
@@ -25,7 +33,7 @@ module.exports = function (grunt) {
                     ' * @license: https://github.com/pro-graphics/pro-motion-extensions\n' +
                     ' **/\n'
                 },
-                files: {src: ['build/pro-motion-extensions.js']}
+                files: {src: ['build/js/pro-motion-extensions.js']}
             },
             GaryC: {
                 options: {
@@ -36,8 +44,10 @@ module.exports = function (grunt) {
                 },
                 files: {
                     src: [
-                        'build/items/simpleBarChart/pro.motion.simpleBarChart.js',
-                        'build/items/textStack/pro.motion.textStack.js'
+                        'build/js/flows/pageStack/pro.motion.flow.pageStack.js',
+                        'build/js/items/imageStack/pro.motion.item.imageStack.js',
+                        'build/js/items/simpleBarChart/pro.motion.item.simpleBarChart.js',
+                        'build/js/items/textStack/pro.motion.item.textStack.js'
                     ]
                 }
             }
@@ -46,14 +56,14 @@ module.exports = function (grunt) {
             package: {
                 options: {
                     mode: 'zip',
-                    archive: 'build/pro.motion.extensions.zip',
+                    archive: 'pro.motion.extensions.zip',
                     comment: 'MIT License - See https://github.com/pro-graphics/pro-motion-extensions.'
                 },
                 files: [{
                     expand: true,
                     cwd: 'build/',
                     src: '**',
-                    dest: 'extensions/'
+                    dest: 'pro.motion/'
                 }]
             }
         }
@@ -68,5 +78,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', ['ts']);
     grunt.registerTask('package', ['ts', 'usebanner', 'compress']);
+
 
 };
