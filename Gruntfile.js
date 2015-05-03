@@ -3,6 +3,7 @@ module.exports = function (grunt) {
     require('time-grunt')(grunt);
 
     grunt.initConfig({
+        proVersion: "0.15",
         pkg: grunt.file.readJSON('package.json'),
         ts: {
             all: {
@@ -64,10 +65,22 @@ module.exports = function (grunt) {
             }
         },
         compress: {
+            gzip: {
+                options: {mode: 'gzip'},
+                expand: true,
+                flatten: true,
+                ext: '.js',
+                extDot: 'last',
+                src: [
+                    'build/js/pro.greensock.min.js',
+                    'build/js/pro.motion.min.js',
+                    'build/js/pro.motion.extensions.min.js'],
+                dest: '/pro.motion.gzip/<%= proVersion %>/'
+            },
             package: {
                 options: {
                     mode: 'zip',
-                    archive: 'pro.motion.extensions.zip',
+                    archive: 'pro.motion.extensions.<%= proVersion %>.zip',
                     comment: 'MIT License - See https://github.com/pro-graphics/pro-motion-extensions.'
                 },
                 files: [{
@@ -86,10 +99,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks("grunt-ts");
-    grunt.loadNpmTasks('grunt-text-replace');
 
     grunt.registerTask('default', ['ts']);
-    grunt.registerTask('package', ['ts', 'usebanner', 'uglify', 'compress']);
-
-
+    grunt.registerTask('package', ['ts', 'usebanner', 'uglify', 'compress:package']);
+    grunt.registerTask('gzip', ['compress:gzip']);
 };
