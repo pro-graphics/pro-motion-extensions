@@ -66,7 +66,7 @@ module.exports = function (grunt) {
         },
         compress: {
             gzip: {
-                options: {mode: 'gzip'},
+                options: {mode: 'gzip', level: 9},
                 expand: true,
                 flatten: true,
                 ext: '.js',
