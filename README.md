@@ -10,4 +10,4 @@ There are 3 types of extensions that can be created.
 * Players - e.g. custom buttons, track players, kiosks, ...
 
 
-See [https://pro.graphics](https://pro.graphics) for more detail.
+[Download the latest build with examples.](https://pro.graphics/motion/downloads/)
