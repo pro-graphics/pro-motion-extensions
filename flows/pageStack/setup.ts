@@ -9,20 +9,18 @@ module Pro.Motion.Extensions.Flows.pageStack {
 
     export function readJson(story: Models.Story, json: any): Models.Flows.Flow {
 
-        var setup = json.setup || {};
-
         //
         // Configuration common to all flows
         //
-        var placement = Types.Placement.fromJson(setup.placement);
-        var pageAspectRatio = Util.convertToNumber(setup.pageAspectRatio, 4 / 3); //stack flows default to 4/3 ratio
+        var placement = Types.Placement.fromJson(Util.getSetup(json, "placement"));
+        var pageAspectRatio = Util.convertToNumber(Util.getSetup(json, "pageAspectRatio"), 4 / 3); //stack flows default to 4/3 ratio
 
         //
         // Configuration specific to stack flows
         //
-        var stacks = Types.Stacks.fromJson(setup.stacks || Extension.defaultStacksJson);
+        var stacks = Types.Stacks.fromJson(Util.getSetup(json, "stacks") || Extension.defaultStacksJson);
 
-        return new Extension(story, placement, setup.defaultPageClass, pageAspectRatio, stacks);
+        return new Extension(story, placement, Util.getSetup(json, "defaultPageClass"), pageAspectRatio, stacks);
     }
 
     export function writeJson(flow: Extension, json: any) {

@@ -49,6 +49,12 @@ declare module Pro.Motion.Util {
     function getElementText(element: HTMLElement): string;
 }
 declare module Pro.Motion.Util {
+    function lowercaseProperties(json: any): any;
+}
+declare module Pro.Motion.Util {
+    function getSetup(json: any, name: string): any;
+}
+declare module Pro.Motion.Util {
     function getSign(n: number): number;
 }
 declare module Pro.Motion.Util {
@@ -1074,7 +1080,6 @@ declare module Pro.Motion.Models.Properties {
         static BORDER: BorderPropertyType;
         static BULLET: BulletsPropertyType;
         static CLASS: ClassPropertyType;
-        static COLOR: ColorPropertyType;
         static CORNERS: CornersPropertyType;
         static CROP: CropPropertyType;
         static CROP_SVG: CropPropertyType;
@@ -1090,6 +1095,7 @@ declare module Pro.Motion.Models.Properties {
         static SKEW: SkewPropertyType;
         static SHADOW: ShadowPropertyType;
         static TEXT_ALIGN: TextAlignPropertyType;
+        static TEXT_COLOR: ColorPropertyType;
         static TEXT_SHADOW: TextShadowPropertyType;
         static TEXT_STYLE: TextStylePropertyType;
         static TEXT_WIDTH: TextWidthPropertyType;
@@ -1738,7 +1744,8 @@ declare module Pro.Motion.Serialization {
     import Scripts = Pro.Motion.Models.Scripts;
     import Properties = Pro.Motion.Models.Properties;
     class ScriptSetReader {
-        static read(itemSet: Models.IItemSet, name: string, json: any, propertyTypes: Properties.IPropertyType[]): Scripts.ScriptSet;
+        private static read(itemSet, name, json, propertyTypes);
+        static readJson(itemSet: Models.IItemSet, name: string, json: any, labels: string[], propertyTypes: Properties.IPropertyType[]): Scripts.ScriptSet;
     }
 }
 declare module Pro.Motion.Serialization {

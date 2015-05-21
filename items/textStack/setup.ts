@@ -25,7 +25,7 @@ module Pro.Motion.Extensions.Items.textStack {
 
         var propertyTypes = Props.getPropertyTypes();
         var init = Serialization.PropertyListReader.read(itemSet.story, json.init, propertyTypes);
-        var scriptSet = Serialization.ScriptSetReader.read(itemSet, "Text", json.scripts, propertyTypes);
+        var scriptSet = Serialization.ScriptSetReader.readJson(itemSet, "Text", json, [""], propertyTypes);
 
         var item = new Extension(itemSet, startOnStep, texts, stacks, init, scriptSet);
         return item;

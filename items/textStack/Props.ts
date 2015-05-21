@@ -16,13 +16,13 @@ module Pro.Motion.Extensions.Items.textStack {
                 p.push(cache.ANCHOR);
                 p.push(cache.ANIMATION);
                 p.push(cache.CLASS);
-                p.push(cache.COLOR);
                 p.push(cache.FONT);
                 p.push(cache.OPACITY);
                 p.push(cache.POSITION);
                 p.push(cache.ROTATION);
                 p.push(cache.SCALE);
                 p.push(cache.SKEW);
+                p.push(cache.TEXT_COLOR);
                 p.push(cache.TEXT_SHADOW);
                 p.push(cache.TEXT_STYLE);
                 p.push(cache.TRANSFORM_ORIGIN);

@@ -3,7 +3,7 @@ module.exports = function (grunt) {
     require('time-grunt')(grunt);
 
     grunt.initConfig({
-        proVersion: "0.15",
+        proVersion: "0.16",
         pkg: grunt.file.readJSON('package.json'),
         ts: {
             all: {

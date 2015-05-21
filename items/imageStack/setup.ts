@@ -30,7 +30,7 @@ module Pro.Motion.Extensions.Items.imageStack {
 
         var propertyTypes = Props.getPropertyTypes();
         var init = Serialization.PropertyListReader.read(itemSet.story, json.init, propertyTypes);
-        var scriptSet = Serialization.ScriptSetReader.read(itemSet, "Images", json.scripts, propertyTypes);
+        var scriptSet = Serialization.ScriptSetReader.readJson(itemSet, "Images", json, [""], propertyTypes);
 
         var item = new Extension(itemSet, startOnStep, srcs, width, height, stacks, init, scriptSet);
         return item;
