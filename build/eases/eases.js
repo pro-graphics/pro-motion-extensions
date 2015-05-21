@@ -2,166 +2,75 @@ var eases = Pro.Motion.Stories.eases = Pro.Motion.Stories.eases || {};
 
 eases.story = {
     classes:{
-        label:{ font:6, anchor:-50, transformOrigin:-50, rotation:-90 }
+        label:{ font:6, anchor:-50, origin:-50, rot:-90 }
     },
     frame:{
-        setup:{padding:15},
-        init:{background:"#BADA55", corners:true}
+        padding:15,
+        init:{bg:"#BADA55", corners:true}
     },
     items:[
-        {
-            setup:{text:"linear"},
-            init:{position:[-48, -35], class:"label"}
+        {   text:"linear",
+            init:{pos:[-48,-35], class:"label"}
         },
-        {
-            item:"image",
-            setup:{src:"ball.gif", width:5},
-            init:{position:[-48, -32]},
-            scripts:[
-                {
-                    actions:[
-                        {animation:{duration:4, ease:"linear"}, position:[-48, 45]},
-                        {animation:{duration:4, ease:"linear"}, position:[-48, -32]}
-                    ]
-                }
-            ]
+        {   item:"image", src:"ball.gif", width:5,
+            init:{pos:[-48,-32]},
+            action:{anim:[4,"linear",1,0,true], pos:[-48,45]}
         },
-        {
-            setup:{text:"bounce"},
-            init:{position:[-36, -35], class:"label"}
+        {   text:"bounce",
+            init:{pos:[-36,-35], class:"label"}
         },
-        {
-            item:"image",
-            setup:{src:"ball.gif", width:5},
-            init:{position:[-36, -32]},
-            scripts:[
-                {
-                    actions:[
-                        {animation:{duration:4, ease:"bounce"}, position:[-36, 45]},
-                        {animation:{duration:4, ease:"bounce in"}, position:[-36, -32]}
-                    ]
-                }
-            ]
+        {   item:"image", src:"ball.gif", width:5,
+            init:{pos:[-36,-32]},
+            action:{anim:[4,"bounce",1,0,true], pos:[-36,45]}
         },
-        {
-            setup:{text:"elastic"},
-            init:{position:[-24, -35], class:"label"}
+        {   text:"elastic",
+            init:{pos:[-24,-35], class:"label"}
         },
-        {
-            item:"image",
-            setup:{src:"ball.gif", width:5},
-            init:{position:[-24, -32]},
-            scripts:[
-                {
-                    actions:[
-                        {animation:{duration:4, ease:"elastic"}, position:[-24, 45]},
-                        {animation:{duration:4, ease:"elastic in"}, position:[-24, -32]}
-                    ]
-                }
-            ]
+        {   item:"image", src:"ball.gif", width:5,
+            init:{pos:[-24,-32]},
+            action:{anim:[4,"elastic",1,0,true], pos:[-24,45]}
         },
-        {
-            setup:{text:"back"},
-            init:{position:[-12, -35], class:"label"}
+        {   text:"back",
+            init:{pos:[-12,-35], class:"label"}
         },
-        {
-            item:"image",
-            setup:{src:"ball.gif", width:5},
-            init:{position:[-12, -32]},
-            scripts:[
-                {
-                    actions:[
-                        {animation:{duration:4, ease:"back"}, position:[-12, 45]},
-                        {animation:{duration:4, ease:"back in"}, position:[-12, -32]}
-                    ]
-                }
-            ]
+        {   item:"image", src:"ball.gif", width:5,
+            init:{pos:[-12, -32]},
+            action:{anim:[4,"back",1,0,true], pos:[-12,45]}
         },
-        {
-            setup:{text:"sine"},
-            init:{position:[0, -35], class:"label"}
+        {   text:"sine",
+            init:{pos:[0,-35], class:"label"}
         },
-        {
-            item:"image",
-            setup:{src:"ball.gif", width:5},
-            init:{position:[0, -32]},
-            scripts:[
-                {
-                    actions:[
-                        {animation:{duration:4, ease:"sine"}, position:[0, 45]},
-                        {animation:{duration:4, ease:"sine in"}, position:[0, -32]}
-                    ]
-                }
-            ]
+        {   item:"image", src:"ball.gif", width:5,
+            init:{pos:[0, -32]},
+            action:{anim:[4,"sine",1,0,true], pos:[0,45]}
         },
-        {
-            setup:{text:"curve"},
-            init:{position:[12, -35], class:"label"}
+        {   text:"curve",
+            init:{pos:[12,-35], class:"label"}
         },
-        {
-            item:"image",
-            setup:{src:"ball.gif", width:5},
-            init:{position:[12, -32]},
-            scripts:[
-                {
-                    actions:[
-                        {animation:{duration:4, ease:"curve"}, position:[12, 45]},
-                        {animation:{duration:4, ease:"curve in"}, position:[12, -32]}
-                    ]
-                }
-            ]
+        {   item:"image", src:"ball.gif", width:5,
+            init:{pos:[12,-32]},
+            action:{anim:[4,"curve",1,0,true], pos:[12,45]}
         },
-        {
-            setup:{text:"expo"},
-            init:{position:[24, -35], class:"label"}
+        {   text:"expo",
+            init:{pos:[24,-35], class:"label"}
         },
-        {
-            item:"image",
-            setup:{src:"ball.gif", width:5},
-            init:{position:[24, -32]},
-            scripts:[
-                {
-                    actions:[
-                        {animation:{duration:4, ease:"expo"}, position:[24, 45]},
-                        {animation:{duration:4, ease:"expo in"}, position:[24, -32]}
-                    ]
-                }
-            ]
+        {   item:"image", src:"ball.gif", width:5,
+            init:{pos:[24,-32]},
+            action:{anim:[4,"expo",1,0,true], pos:[24,45]}
         },
-        {
-            setup:{text:"slow mo"},
-            init:{position:[36, -35], class:"label"}
+        {   text:"slow mo",
+            init:{pos:[36,-35], class:"label"}
         },
-        {
-            item:"image",
-            setup:{src:"ball.gif", width:5},
-            init:{position:[36, -32]},
-            scripts:[
-                {
-                    actions:[
-                        {animation:{duration:4, ease:"slowmo less"}, position:[36, 45]},
-                        {animation:{duration:4, ease:"slowmoback less"}, position:[36, -32]}
-                    ]
-                }
-            ]
+        {   item:"image", src:"ball.gif", width:5,
+            init:{pos:[36,-32]},
+            action:{anim:[4,"slowmo less",1,0,true], pos:[36,45]}
         },
-        {
-            setup:{text:"slow mo"},
-            init:{position:[48, -35], class:"label"}
+        {   text:"slow mo",
+            init:{pos:[48,-35], class:"label"}
         },
-        {
-            item:"image",
-            setup:{src:"ball.gif", width:5},
-            init:{position:[48, -32]},
-            scripts:[
-                {
-                    actions:[
-                        {animation:{duration:4, ease:"slowmo more"}, position:[48, 45]},
-                        {animation:{duration:4, ease:"slowmoback more"}, position:[48, -32]},
-                        {delay:1}
-                    ]
-                }
-            ]
+        {   item:"image",src:"ball.gif", width:5,
+            init:{pos:[48,-32]},
+            action:{anim:[4,"slowmo more",1,0,true], pos:[48,45]}
         }
     ]
 };

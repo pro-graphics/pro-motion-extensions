@@ -1,39 +1,46 @@
 var stack3 = Pro.Motion.Stories.stack3 = Pro.Motion.Stories.stack3 || {};
 
 stack3.story = {
-    canvas:{init:{background:"#BADA55", corners:true}},
-    frame:{setup:{padding:15}},
-    flows:[
-        {   flow:"pageStack",
-            setup:{
-                placement:{ position:[-100,-100,0]},
-                pageAspectRatio:4 / 3,
-                stacks:{
-                    current:{ scale:90},
-                    future:{ position:[60,-75,-10], scale:40, opacity:80,
-                        offset:{ position:[-45,0,0], opacity:80 }},
-                    past:{ position:[-60,75,-10], scale:40,
-                        offset:{ position:[45,0,0], opacity:80 }}
+    canvas:{init:{bg:"#BADA55", corners:true}},
+    frame:{padding:15},
+    flow:{
+        flow:"pageStack",
+        placement:{ pos:[-100,-100,0]},
+        pageAspectRatio:4/3,
+        stacks:{
+            current:{ scale:90},
+            future:{ pos:[60,-75,-10], scale:40, opacity:80,
+                offset:{ pos:[-45,0,0], opacity:80 }},
+            past:{ pos:[-60,75,-10], scale:40,
+                offset:{ pos:[45,0,0], opacity:80 }}
+        },
+        pages:[
+            { item:{
+                    text:["A 'Page Stack' with", "custom configuration."],
+                    init:{font:10, align:"center"}
                 }
             },
-            pages:[
-                { items:[
-                    {
-                        setup:{text:"A 'Page Stack' with<br>custom configuration."},
-                        init:{font:10, textAlign:"center"}
-                    }]
-                },
-                { items:[{setup:{text:"2"}}]},
-                { items:[{setup:{text:"3"}}]},
-                { items:[{setup:{text:"4"}}]},
-                { items:[{setup:{text:"5"}}]},
-                { items:[{setup:{text:"6"}}]},
-                { items:[{setup:{text:"In 3D!"},
-                    init:{ position:{z:30}, transformOrigin:[0,0,-15], font:10, color:"white", padding:true, border:[0.5, "white", "ridge"], corners:true, background:"orange", shadow:[[1,1,2,"rgba(0,0,0,0.3)"],[0,0,5,"rgba(0,0,0,0.15)",3,true]]},
-                    scripts:[
-                        { type:"step1", actions:[{delay:0.5, animation:{duration:4,ease:"elastic"}, rotation:{x:360}} ]}
-                    ]}]
-                }]
-        }
-    ]
+            { item:{text:"2"}},
+            { item:{text:"3"}},
+            { item:{text:"4"}},
+            { item:{text:"5"}},
+            { item:{text:"6"}},
+            { item: {
+                    text: "In 3D!",
+                    init: {
+                        pos: {z: 30},
+                        origin: [0, 0, -15],
+                        font: 10,
+                        color: "black",
+                        padding: true,
+                        border: [0.5, "white", "ridge"],
+                        corners: true,
+                        bg: "orange",
+                        shadow: [[1,1,2,"rgba(0,0,0,0.3)"], [0,0,5,"rgba(0,0,0,0.15)",3,true]]
+                    },
+                    action:{delay:0.5, anim:[4,"elastic"], rot:{x:360}}
+                }
+            }
+        ]
+    }
 };
